@@ -10,7 +10,7 @@ user() {
 }
 
 host() {
-  echo "%{\e[1;39;5;35m%}%m%{$reset_color%}";
+  echo "%{\e[1;38;5;35m%}%m%{$reset_color%}";
 }
 
 git_prompt_info() {
