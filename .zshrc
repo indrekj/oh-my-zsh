@@ -24,7 +24,7 @@ source $ZSH/oh-my-zsh.sh
 export EDITOR='vim'
 
 # Use more cores when compiling something
-export MAKEFLAGS="-j8"
+export MAKEFLAGS="-j12"
 
 bindkey -e
 bindkey '\M-d' backward-kill-word
@@ -40,16 +40,20 @@ bindkey -M menuselect '^M' .accept-line
 # Add local sbin to path
 export PATH="$PATH:/usr/local/sbin"
 
-# Add Glia binaries to the path
-export PATH="$HOME/salemove/sm-configuration/bin:$PATH"
-
 # Add relative node modules bin dir to the path
 export PATH="./node_modules/.bin:$PATH"
 
+# Add user bin dir to the path
+export PATH="$PATH:$HOME/bin"
+export PATH="$HOME/.local/bin:$PATH"
+
 # Golang configuration
 export GOPATH=$HOME/go
-export GOROOT=/usr/local/opt/go/libexec
-export PATH=$PATH:$GOPATH/bin:/usr/local/opt/go/libexec/bin
+export GOROOT=/usr/local/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
+# Add Glia binaries to the path
+export PATH="$HOME/salemove/sm-configuration/bin:$PATH"
 
 # Erlang configuration
 export ERL_AFLAGS="-kernel shell_history enabled"
@@ -63,6 +67,35 @@ alias find='noglob find'
 
 # Do not share command history data
 unsetopt share_history
+
+# Linux specific settings
+if command apt > /dev/null; then
+  export AWS_OKTA_BACKEND=secret-service
+
+  # Completion for kitty
+  kitty + complete setup zsh | source /dev/stdin
+
+  # To make docker-compose work with Glia
+  # sudo chown indrek:indrek /run/host-services
+  # ln -s $SSH_AUTH_SOCK /run/host-services/ssh-auth.sock
+fi
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+# Load RVM into a shell session *as a function*
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+
+irt() {
+  invoker reload "$1" && invoker tail "$1"
+}
+
+export OTEL_PROPAGATORS="b3multi"
+export OTEL_TRACES_EXPORTER="otlp"
+export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="http://localhost:4318/v1/traces"
+export OTEL_TRACES_SAMPLER="parentbased_always_off"
+
+export NS_NAME=indrek
 
 # Local machine-specific and private configuration if exists
 [ -e ~/.zshrc.private ] && source ~/.zshrc.private
