@@ -65,8 +65,9 @@ alias vim='nocorrect nvim'
 # find -name *asd* work like find -name '*asd*'
 alias find='noglob find'
 
-# Do not share command history data
+# Immediately write to the history but don't re-read it.
 unsetopt share_history
+setopt inc_append_history
 
 # Linux specific settings
 if command apt > /dev/null; then
