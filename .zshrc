@@ -70,7 +70,7 @@ unsetopt share_history
 setopt inc_append_history
 
 # Linux specific settings
-if command apt > /dev/null; then
+if command apt 2> /dev/null; then
   export AWS_OKTA_BACKEND=secret-service
 
   # Completion for kitty
